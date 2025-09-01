@@ -1,4 +1,4 @@
-name: Python Selenium Tests
+name: Selenium Tests
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
+    - name: Checkout repository
       uses: actions/checkout@v3
 
     - name: Set up Python
@@ -24,14 +24,17 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    # --- Установка Chrome + ChromeDriver ---
-    - name: Set up Chrome & ChromeDriver
-      uses: browser-actions/setup-chrome@v3
-      with:
-        chrome-version: latest  # Можно указать конкретную версию, например '116.0.5845.96'
+    # --- Установка Chromium и Chromedriver ---
+    - name: Install Chromium & Chromedriver
+      run: |
+        sudo apt update
+        sudo apt install -y chromium-browser chromium-chromedriver
+        ln -s /usr/bin/chromium-browser /usr/bin/google-chrome || true
 
-    - name: Verify Chrome
-      run: google-chrome --version
+    - name: Verify Chromium & Chromedriver
+      run: |
+        chromium-browser --version
+        chromedriver --version
 
     - name: Run Selenium tests
       run: |
