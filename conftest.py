@@ -11,7 +11,8 @@ def serve_site():
     """Поднимаем HTTP сервер на 8000 из папки dist"""
     process = subprocess.Popen(
         ["python3", "-m", "http.server", "8000"],
-        cwd=os.path.join(os.path.dirname(__file__), "..", "dist"),
+        cwd=os.path.join(os.path.dirname(__file__), "dist")
+,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE
     )
