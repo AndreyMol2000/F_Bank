@@ -2,16 +2,17 @@ name: Python Tests
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -23,12 +24,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest
 
-    - name: Prepare dist folder
+    - name: Run HTTP server in background
       run: |
-        mkdir -p dist/assets
-        cp index.html dist/
-        cp assets/index-BUH56GOL.js dist/assets/
-        cp assets/index-Dy9zO9yl.css dist/assets/
+        python -m http.server 8000 --directory dist &
+        sleep 2  # чтобы сервер успел подняться
 
     - name: Run tests
-      run: pytest -v
+      run: |
+        pytest -v
