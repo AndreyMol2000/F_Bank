@@ -1,34 +1,52 @@
-# conftest.py
 import pytest
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-import subprocess
-import time
+from selenium.webdriver.common.by import By
 import os
+from http.server import HTTPServer, SimpleHTTPRequestHandler
+import threading
 
-@pytest.fixture(scope="module")
+# -------------------
+# Фикстура для локального сервера
+# -------------------
+@pytest.fixture(scope="session", autouse=True)
 def serve_site():
-    """Поднимаем HTTP сервер на 8000 из папки dist"""
-    process = subprocess.Popen(
-        ["python3", "-m", "http.server", "8000"],
-        cwd=os.path.join(os.path.dirname(__file__), "dist")
-,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
-    )
-    time.sleep(2)  # ждём пока сервер стартанёт
+    """Запускает HTTP сервер для папки dist/ на localhost:8000"""
+    dist_path = os.path.join(os.getcwd(), "dist")
+    os.chdir(dist_path)
+    server = HTTPServer(("localhost", 8000), SimpleHTTPRequestHandler)
+    thread = threading.Thread(target=server.serve_forever)
+    thread.start()
     yield
-    process.terminate()
-    process.wait()
+    server.shutdown()
+    thread.join()
 
-
-@pytest.fixture(scope="module")
-def browser(serve_site):
-    """Запускаем Chrome в headless режиме"""
+# -------------------
+# Фикстура браузера
+# -------------------
+@pytest.fixture
+def browser():
     options = Options()
-    options.add_argument("--headless")
+    options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     driver = webdriver.Chrome(options=options)
     yield driver
     driver.quit()
+
+# -------------------
+# Фикстуры для тестовых данных
+# -------------------
+@pytest.fixture
+def block_id():
+    # id поля номера карты
+    return "rub-sum"
+
+@pytest.fixture
+def num():
+    return "2222222222222222"
+
+@pytest.fixture
+def summa():
+    return 10000
