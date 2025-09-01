@@ -1,9 +1,7 @@
-name: Python Tests
+name: Python Selenium Tests
 
 on:
   push:
-    branches:
-      - main
   pull_request:
 
 jobs:
@@ -11,24 +9,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+    # 1. Получаем код
+    - uses: actions/checkout@v3
 
+    # 2. Устанавливаем Python
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: 3.11
 
-    - name: Install dependencies
+    # 3. Устанавливаем зависимости Python
+    - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pytest
+        pip install pytest selenium
 
-    - name: Run HTTP server in background
+    # 4. Устанавливаем Google Chrome
+    - name: Install Google Chrome
       run: |
-        python -m http.server 8000 --directory dist &
-        sleep 2  # чтобы сервер успел подняться
+        sudo apt update
+        sudo apt install -y wget unzip xvfb libxi6 libgconf-2-4
+        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt --fix-broken install -y
 
-    - name: Run tests
+    # 5. Устанавливаем ChromeDriver
+    - name: Install ChromeDriver
+      run: |
+        CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
+        wget -O chromedriver.zip https://chromedriver.storage.googleapis.com/$CHROME_VERSION/chromedriver_linux64.zip
+        unzip chromedriver.zip
+        sudo mv chromedriver /usr/local/bin/
+        sudo chmod +x /usr/local/bin/chromedriver
+
+    # 6. Подготовка dist
+    - name: Prepare dist folder
+      run: |
+        mkdir -p dist/assets
+        cp index.html dist/
+        cp assets/* dist/assets/
+
+    # 7. Запуск тестов
+    - name: Run pytest
       run: |
         pytest -v
