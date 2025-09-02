@@ -121,38 +121,51 @@ def test_input_summ_negative(browser):
     total = int(summ_input.get_attribute("value")) + float(commision.text)
     assert total <= 30000 - 20001
 
-
-# Проверка комиссии
+# Проверка комиссии с округлением вниз (как на сайте)
 @pytest.mark.parametrize("type_,num", [
      ("rub-sum", "10000"),
-    ("rub-sum", "9099"),
-    ("rub-sum", "-10"),
-    ("rub-sum", "0"),
+     ("rub-sum", "9099"),
+     ("rub-sum", "-10"),
+     ("rub-sum", "0"),
 
-    ("usd-sum", "10000",),
-    ("usd-sum", "9099", ),
-    ("usd-sum", "-10", ),
-    ("usd-sum", "0", ),
+     ("usd-sum", "10000"),
+     ("usd-sum", "9099"),
+     ("usd-sum", "-10"),
+     ("usd-sum", "0"),
 
-    ("euro-sum", "10000"),
-    ("euro-sum", "9099"),
-    ("euro-sum", "-10"),
-    ("euro-sum", "0"),
+     ("euro-sum", "10000"),
+     ("euro-sum", "9099"),
+     ("euro-sum", "-10"),
+     ("euro-sum", "0"),
 ])
-def test_comission_rub_positive(browser, type_, num):
+def test_comission_strict(browser, type_, num):
+    # Выбираем валюту
     click_block = browser.find_element(By.ID, type_)
     click_block.click()
 
+    # Вводим номер карты
     number_input = browser.find_element(By.CSS_SELECTOR, "[type=text]")
     number_input.clear()
     number_input.send_keys("2222222222222222")
 
+    # Вводим сумму
     summ_input = browser.find_element(By.CSS_SELECTOR, "input[placeholder='1000']")
     summ_input.clear()
     summ_input.send_keys(num)
 
-    comission = browser.find_element(By.ID, "comission")
-    assert math.floor(float(comission.text)) == math.floor(float(num) * 0.1)
+    # Получаем комиссию с сайта
+    comission_text = browser.find_element(By.ID, "comission").text
+    actual_commission = float(comission_text.replace(",", "."))
+
+    # Вычисляем ожидаемую комиссию, округляя вниз
+    expected_commission = math.floor(float(num) * 0.1)
+
+    # Строгая проверка
+    assert actual_commission == expected_commission, (
+        f"Комиссия для {num} в {type_} должна быть {expected_commission}, "
+        f"но сайт вернул {actual_commission}"
+    )
+
 
 
 @pytest.mark.xfail(reason="Некорректная комиссия")
