@@ -22,9 +22,17 @@ def browser():
 
 # Проверка длины номера
 @pytest.mark.parametrize("type_,number", [
-    ("rub-sum", "12345678901234"),       # 14 цифр, input не появляется
-    ("rub-sum", "123456789012345"),      # 15 цифр, input не появляется
-    ("rub-sum", "1234567890123456"),     # 16 цифр, input появляется
+    ("rub-sum", "12345678901234"),       
+    ("rub-sum", "123456789012345"),     
+    ("rub-sum", "1234567890123456"), 
+
+    ("usd-sum", "12345678901234"),       
+    ("usd-sum", "123456789012345"),     
+    ("usd-sum", "1234567890123456"), 
+
+    ("euro-sum", "12345678901234"),       
+    ("euro-sum", "123456789012345"),     
+    ("euro-sum", "1234567890123456"),     
 ])
 def test_summ_input_limit_positive(browser, type_, number):
     click_block = browser.find_element(By.ID, type_)
@@ -61,6 +69,19 @@ def test_summ_input_limit_negative(browser):
 @pytest.mark.parametrize("type_,num,reserved,ollsumm", [
     ("rub-sum", "10000", 20001, 30000),
     ("rub-sum", "9099", 20001, 30000),
+    ("rub-sum", "-10", 20001, 30000),
+    ("rub-sum", "0", 20001, 30000),
+
+    ("usd-sum", "10000",0, 100),
+    ("usd-sum", "9099", 0, 100),
+    ("usd-sum", "-10", 0, 100),
+    ("usd-sum", "0", 0, 100),
+
+    ("euro-sum", "10000", 26,300),
+    ("euro-sum", "9099", 26,300),
+    ("euro-sum", "-10", 26,300),
+    ("euro-sum", "0", 26,300),
+    
 ])
 @pytest.mark.xfail(reason="Сумма с комиссией превышает доступный резерв")
 def test_input_summ_positive(browser, type_, num, reserved, ollsumm):
@@ -103,8 +124,20 @@ def test_input_summ_negative(browser):
 
 # Проверка комиссии
 @pytest.mark.parametrize("type_,num", [
-    ("rub-sum", "10000"),
+     ("rub-sum", "10000"),
+    ("rub-sum", "9099"),
+    ("rub-sum", "-10"),
     ("rub-sum", "0"),
+
+    ("usd-sum", "10000",),
+    ("usd-sum", "9099", ),
+    ("usd-sum", "-10", ),
+    ("usd-sum", "0", ),
+
+    ("euro-sum", "10000"),
+    ("euro-sum", "9099"),
+    ("euro-sum", "-10"),
+    ("euro-sum", "0"),
 ])
 def test_comission_rub_positive(browser, type_, num):
     click_block = browser.find_element(By.ID, type_)
