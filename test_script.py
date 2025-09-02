@@ -24,6 +24,7 @@ def test_summ_input_limit(browser, type_, number):
         # Если input появился, длина номера должна быть ровно 16
         assert len(number) == 16, "больше 16 чисел ошибка"
     except NoSuchElementException:
+        browser.save_screenshot("error_screenshot.png")
         # Если input не появился, длина номера меньше 16
         assert len(number) < 16
 
