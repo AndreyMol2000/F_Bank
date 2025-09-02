@@ -3,7 +3,30 @@ import pytest
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 import math
+import pytest
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+import time
 
+def test_input_number_rub(browser, block_id, num):
+    browser.get("http://localhost:8000/index.html")
+    elem = browser.find_element(By.ID, block_id)
+    elem.clear()
+    elem.send_keys(num)
+    assert elem.get_attribute("value") == num
+
+# фикстура для драйвера
+@pytest.fixture(scope="module")
+def driver():
+    options = Options()
+    options.add_argument("--headless")  # запускаем без GUI
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    driver = webdriver.Chrome(options=options)
+    driver.get("http://localhost:8000/?balance=30000&reserved=20001")
+    yield driver
+    driver.quit()
 
 @pytest.mark.parametrize("type_,number", [
     ("rub-sum", "12345678901234"),       # 14 цифр, input не появляется
@@ -24,7 +47,6 @@ def test_summ_input_limit(browser, type_, number):
         # Если input появился, длина номера должна быть ровно 16
         assert len(number) == 16, "больше 16 чисел ошибка"
     except NoSuchElementException:
-        browser.save_screenshot("error_screenshot.png")
         # Если input не появился, длина номера меньше 16
         assert len(number) < 16
 
