@@ -50,3 +50,28 @@ def num():
 @pytest.fixture
 def summa():
     return 10000
+
+# -------------------
+# Скриншоты при падении тестов
+# -------------------
+import pytest
+import os
+
+SCREENSHOT_DIR = os.path.join(os.getcwd(), "screenshots")
+os.makedirs(SCREENSHOT_DIR, exist_ok=True)
+
+@pytest.hookimpl(hookwrapper=True, tryfirst=True)
+def pytest_runtest_makereport(item, call):
+    """Делает скриншот при падении теста, если есть фикстура browser"""
+    outcome = yield
+    rep = outcome.get_result()
+
+    if rep.when == "call" and rep.failed:
+        browser = item.funcargs.get("browser")
+        if browser:
+            file_name = os.path.join(SCREENSHOT_DIR, f"{item.name}.png")
+            try:
+                browser.save_screenshot(file_name)
+                print(f"\nСкриншот при падении сохранён: {file_name}")
+            except Exception as e:
+                print(f"\nНе удалось сохранить скриншот: {e}")
