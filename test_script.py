@@ -108,7 +108,7 @@ def test_input_summ_positive(browser, type_, num, reserved, ollsumm):
 
 @pytest.mark.parametrize("type_,num,reserved,ollsumm", [
     ("rub-sum", "10000", 20001, 30000),
-    ("rub-sum", "9099", 20001, 30000), 
+    ("rub-sum", "9099", 20001, 30000),
     ("rub-sum", "-10", 20001, 30000),
     ("rub-sum", "0", 20001, 30000),
     
@@ -138,8 +138,7 @@ def test_input_summ_negative(browser  , type_ , num , reserved , ollsumm):
     summ_input.clear()
     summ_input.send_keys(num)  
 
-    commision = browser.find_element(By.ID, "comission")
-    total = int(summ_input.get_attribute("value")) + float(commision.text)
+    total = int(summ_input.get_attribute("value")) + int(num * 0.1)
     buttons = browser.find_elements(By.ID, "submit-button")
     assert total <= ollsumm - reserved and total > 0  and len(buttons) == 0
     
