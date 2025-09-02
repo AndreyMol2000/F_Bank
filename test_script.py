@@ -123,8 +123,8 @@ def test_input_summ_positive(browser, type_, num, reserved, ollsumm):
 ])
 # Ожидаемое превышение резерва
 @pytest.mark.xfail(reason="Сумма с комиссией превышает резерв")
-def test_input_summ_negative(browser):
-    click_block = browser.find_element(By.ID, "rub-sum")
+def test_input_summ_negative(browser  , type_ , num , reserved , ollsumm):
+    click_block = browser.find_element(By.ID, type_)
     click_block.click()
 
     number_input = browser.find_element(By.CSS_SELECTOR, "[type=text]")
@@ -133,11 +133,11 @@ def test_input_summ_negative(browser):
 
     summ_input = browser.find_element(By.CSS_SELECTOR, "input[placeholder='1000']")
     summ_input.clear()
-    summ_input.send_keys("10000")  # тут сумма больше доступного резерва
+    summ_input.send_keys(num)  
 
     commision = browser.find_element(By.ID, "comission")
     total = int(summ_input.get_attribute("value")) + float(commision.text)
-    assert total <= 30000 - 20001 and total > 0
+    assert total <= ollsumm - reserved and total > 0
 
 
 
