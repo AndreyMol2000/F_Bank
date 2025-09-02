@@ -96,4 +96,4 @@ def test_comission_rub(browser , type_ , num ):
     summ_input.send_keys(num)
 
     comission = browser.find_element(By.ID, "comission")
-    assert math.floor(float(comission.text)) == math.floor(10000 * 0.1), "Комиссия не совпадает"
+    assert math.floor(float(comission.text)) == math.floor(float(num) * 0.1), "Комиссия не совпадает"
