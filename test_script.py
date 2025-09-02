@@ -29,7 +29,7 @@ def find_optional_element(driver, by, selector, timeout=3):
 def test_summ_input_limit(browser, type_, number):
     wait = WebDriverWait(browser, 10)
 
-    click_block = wait.until(EC.element_to_be_clickable((By.ID, type_)))
+    click_block = wait.until(EC.presence_of_element_located((By.ID, type_)))
     click_block.click()
 
     number_input = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[type=text]")))
@@ -57,7 +57,7 @@ def test_summ_input_limit(browser, type_, number):
 def test_input_summ(browser, type_, num, reserved):
     wait = WebDriverWait(browser, 10)
 
-    click_block = wait.until(EC.element_to_be_clickable((By.ID, type_)))
+    click_block = wait.until(EC.presence_of_element_located((By.ID, type_)))
     click_block.click()
 
     number_input = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[type=text]")))
@@ -90,7 +90,7 @@ def test_input_summ(browser, type_, num, reserved):
 def test_comission_rub(browser, type_, num):
     wait = WebDriverWait(browser, 10)
 
-    click_block = wait.until(EC.element_to_be_clickable((By.ID, type_)))
+    click_block = wait.until(EC.presence_of_element_located((By.ID, type_)))
     click_block.click()
 
     number_input = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[type=text]")))
