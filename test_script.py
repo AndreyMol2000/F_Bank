@@ -68,11 +68,7 @@ def test_summ_input_limit_negative(browser):
 # Проверка суммы и резерва
 @pytest.mark.parametrize("type_,num,reserved,ollsumm", [
     ("rub-sum", "10000", 20001, 30000),
-    '''
-    ("rub-sum", "9099", 20001, 30000), 
-    ("rub-sum", "-10", 20001, 30000),
-    ("rub-sum", "0", 20001, 30000),
-    '''
+    
     ("usd-sum", "10000",0, 100),
     ("usd-sum", "9099", 0, 100),
     ("usd-sum", "-10", 0, 100),
