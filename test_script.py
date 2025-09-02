@@ -2,6 +2,8 @@
 import pytest
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import math
 
 # -------------------
@@ -14,10 +16,12 @@ import math
     ("rub-sum", "12345678901234567"),    # 17 цифр, ошибка
 ])
 def test_summ_input_limit(browser, type_, number):
-    click_block = browser.find_element(By.ID, type_)
+    wait = WebDriverWait(browser, 10)
+
+    click_block = wait.until(EC.element_to_be_clickable((By.ID, type_)))
     click_block.click()
 
-    number_input = browser.find_element(By.CSS_SELECTOR, "[type=text]")
+    number_input = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[type=text]")))
     number_input.clear()
     number_input.send_keys(number)
 
@@ -42,20 +46,23 @@ def test_summ_input_limit(browser, type_, number):
     ("rub-sum", "0", 20001),
 ])
 def test_input_summ(browser, type_, num, reserved):
-    click_block = browser.find_element(By.ID, type_)
+    wait = WebDriverWait(browser, 10)
+
+    click_block = wait.until(EC.element_to_be_clickable((By.ID, type_)))
     click_block.click()
 
-    number_input = browser.find_element(By.CSS_SELECTOR, "[type=text]")
+    number_input = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[type=text]")))
     number_input.clear()
     number_input.send_keys("2222222222222222")
 
-    summ_input = browser.find_element(By.CSS_SELECTOR, "input[placeholder='1000']")
+    summ_input = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[placeholder='1000']")))
     summ_input.clear()
     summ_input.send_keys(num)
 
     # проверка комиссии
-    commision = browser.find_element(By.ID, "comission")
-    oll_sum = browser.find_element(By.ID , type_ ).text
+    commision = wait.until(EC.presence_of_element_located((By.ID, "comission")))
+    oll_sum = browser.find_element(By.ID, type_).text
+
     total = int(summ_input.get_attribute("value")) + float(commision.text)
     # логика осталась прежней: сумма с комиссией не должна превышать доступный резерв
     assert total <= int(oll_sum) - reserved, f"Сумма с комиссией больше чем доступный резерв {reserved}"
@@ -66,24 +73,26 @@ def test_input_summ(browser, type_, num, reserved):
 # -------------------
 # Тест комиссии конкретно для рубля
 # -------------------
-
 @pytest.mark.parametrize("type_,num", [
     ("rub-sum", "10000"),
     ("rub-sum", "9099"),
     ("rub-sum", "-10"),
     ("rub-sum", "0"),
 ])
-def test_comission_rub(browser , type_ , num ):
-    click_block = browser.find_element(By.ID, type_)
+def test_comission_rub(browser, type_, num):
+    wait = WebDriverWait(browser, 10)
+
+    click_block = wait.until(EC.element_to_be_clickable((By.ID, type_)))
     click_block.click()
 
-    number_input = browser.find_element(By.CSS_SELECTOR, "[type=text]")
+    number_input = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[type=text]")))
     number_input.clear()
     number_input.send_keys("2222222222222222")
 
-    summ_input = browser.find_element(By.CSS_SELECTOR, "input[placeholder='1000']")
+    summ_input = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[placeholder='1000']")))
     summ_input.clear()
     summ_input.send_keys(num)
 
-    comission = browser.find_element(By.ID, "comission")
+    comission = wait.until(EC.presence_of_element_located((By.ID, "comission")))
+    # округление в меньшую сторону
     assert math.floor(float(comission.text)) == math.floor(10000 * 0.1), "Комиссия не совпадает"
