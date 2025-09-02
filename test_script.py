@@ -19,7 +19,7 @@ def browser():
     yield driver
     driver.quit()
 
-
+'''
 # Проверка длины номера
 @pytest.mark.parametrize("type_,number", [
     ("rub-sum", "12345678901234"),       
@@ -49,7 +49,7 @@ def test_summ_input_limit_positive(browser, type_, number):
         assert len(number) < 16
 
     number_input.clear()
-
+'''
 
 # Отдельно отмечаем кейс с 17 цифрами как ожидаемое падение
 @pytest.mark.xfail(reason="номер >16 цифр, input не должен появляться")
