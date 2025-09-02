@@ -49,7 +49,7 @@ def test_summ_input_limit_positive(browser, type_, number):
         assert len(number) < 16
 
     number_input.clear()
-'''
+
 
 # Отдельно отмечаем кейс с 17 цифрами как ожидаемое падение
 @pytest.mark.xfail(reason="номер >16 цифр, input не должен появляться")
@@ -64,7 +64,7 @@ def test_summ_input_limit_negative(browser):
     element = browser.find_element(By.CSS_SELECTOR, "input[placeholder='1000']")
     assert len("12345678901234567") == 16
 
-
+'''
 # Проверка суммы и резерва
 @pytest.mark.parametrize("type_,num,reserved,ollsumm", [
     ("rub-sum", "10000", 20001, 30000),
