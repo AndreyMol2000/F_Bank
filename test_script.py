@@ -18,7 +18,7 @@ def test_input_number_rub(browser, block_id, num):
 
 # фикстура для драйвера
 @pytest.fixture(scope="module")
-def driver():
+def browser():
     options = Options()
     options.add_argument("--headless")  # запускаем без GUI
     options.add_argument("--no-sandbox")
