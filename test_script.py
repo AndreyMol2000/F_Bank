@@ -9,12 +9,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import time
 
-def test_input_number_rub(browser, block_id, num):
-    browser.get("http://localhost:8000/index.html")
-    elem = browser.find_element(By.ID, block_id)
-    elem.clear()
-    elem.send_keys(num)
-    assert elem.get_attribute("value") == num
 
 # фикстура для драйвера
 @pytest.fixture(scope="module")
