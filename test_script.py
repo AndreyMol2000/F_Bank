@@ -155,10 +155,14 @@ def test_comission_rub_positive(browser, type_, num):
     assert math.floor(float(comission.text)) == math.floor(float(num) * 0.1)
 
 
-# Ожидаемое расхождение комиссии
 @pytest.mark.xfail(reason="Некорректная комиссия")
-@pytest.mark.parametrize("num", ["9099", "-10"])
-def test_comission_rub_negative(browser, num):
+@pytest.mark.parametrize("num,expected_comission", [
+    ("9099", 909),
+    ("10000", 1000),
+    ("-10", -1),
+    ("0", 0)
+])
+def test_comission_rub_negative(browser, num, expected_comission):
     click_block = browser.find_element(By.ID, "rub-sum")
     click_block.click()
 
@@ -171,4 +175,5 @@ def test_comission_rub_negative(browser, num):
     summ_input.send_keys(num)
 
     comission = browser.find_element(By.ID, "comission")
-    assert math.floor(float(comission.text)) == math.floor(float(num) * 0.1)
+    # сравниваем с ожидаемой комиссией
+    assert math.floor(float(comission.text)) == expected_comission
