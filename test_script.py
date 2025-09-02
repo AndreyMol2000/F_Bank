@@ -105,7 +105,7 @@ def test_input_summ_positive(browser, type_, num, reserved, ollsumm):
     summ_input.clear()
 '''
 
-
+'''
 @pytest.mark.parametrize("type_,num,reserved,ollsumm", [
     ("rub-sum", "10000", 20001, 30000),
     ("rub-sum", "9099", 20001, 30000),
@@ -142,9 +142,9 @@ def test_input_summ_negative(browser  , type_ , num , reserved , ollsumm):
     buttons = browser.find_elements(By.ID, "submit-button")
     assert total <= ollsumm - reserved and total > 0  and len(buttons) == 0
     
-
-
 '''
+
+
 @pytest.mark.xfail(reason="Некорректная комиссия")
 @pytest.mark.parametrize("type_,num,expected_comission", [
     ("rub-sum" ,"9099", 909),
@@ -177,4 +177,3 @@ def test_comission_rub_negative(browser,type_, num, expected_comission):
     comission = browser.find_element(By.ID, "comission")
     # сравниваем с ожидаемой комиссией
     assert math.floor(float(comission.text)) == expected_comission
-'''
