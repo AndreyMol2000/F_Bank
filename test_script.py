@@ -65,6 +65,8 @@ def test_summ_input_limit_negative(browser):
     assert len("12345678901234567") == 16
 
 '''
+
+'''
 # Проверка суммы и резерва
 @pytest.mark.parametrize("type_,num,reserved,ollsumm", [
     ("rub-sum", "10", 20001, 30000),
@@ -101,9 +103,9 @@ def test_input_summ_positive(browser, type_, num, reserved, ollsumm):
     assert total <= int(ollsumm) - reserved, "Сумма с комиссией превышает резерв"
 
     summ_input.clear()
-
-
 '''
+
+
 @pytest.mark.parametrize("type_,num,reserved,ollsumm", [
     ("rub-sum", "10000", 20001, 30000),
     ("rub-sum", "9099", 20001, 30000), 
@@ -138,8 +140,10 @@ def test_input_summ_negative(browser  , type_ , num , reserved , ollsumm):
 
     commision = browser.find_element(By.ID, "comission")
     total = int(summ_input.get_attribute("value")) + float(commision.text)
-    assert total <= ollsumm - reserved and total > 0
-'''
+    buttons = browser.find_elements(By.ID, "submit-button")
+    assert total <= ollsumm - reserved and total > 0  and len(buttons) == 0
+    
+
 
 '''
 @pytest.mark.xfail(reason="Некорректная комиссия")
