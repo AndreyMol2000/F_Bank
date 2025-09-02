@@ -48,13 +48,13 @@ def test_summ_input_limit(browser, type_, number):
 
 
 
-@pytest.mark.parametrize("type_,num,reserved", [
-    ("rub-sum", "10000", 20001),
-    ("rub-sum", "9099", 20001),
-    ("rub-sum", "-10", 20001),
-    ("rub-sum", "0", 20001),
+@pytest.mark.parametrize("type_,num,reserved,ollsumm", [
+    ("rub-sum", "10000", 20001  , 30000 ),
+    ("rub-sum", "9099", 20001 , 30000),
+    ("rub-sum", "-10", 20001 , 30000),
+    ("rub-sum", "0", 20001 , 30000),
 ])
-def test_input_summ(browser, type_, num, reserved):
+def test_input_summ(browser, type_, num, reserved , ollsumm):
     click_block = browser.find_element(By.ID, type_)
     click_block.click()
 
@@ -68,10 +68,9 @@ def test_input_summ(browser, type_, num, reserved):
 
     # проверка комиссии
     commision = browser.find_element(By.ID, "comission")
-    oll_sum = browser.find_element(By.ID , type_ ).text
     total = int(summ_input.get_attribute("value")) + float(commision.text)
     # логика осталась прежней: сумма с комиссией не должна превышать доступный резерв
-    assert total <= int(oll_sum) - reserved, f"Сумма с комиссией больше чем доступный резерв {reserved}"
+    assert total <= int(ollsumm) - reserved, f"Сумма с комиссией больше чем доступный резерв {reserved}"
 
     summ_input.clear()
 
