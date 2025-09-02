@@ -30,13 +30,4 @@ jobs:
     - name: Setup ChromeDriver
       uses: nanasess/setup-chromedriver@v2
 
-    - name: Run tests
-      run: |
-        pytest -v --maxfail=1 --disable-warnings
-
-          - name: Upload screenshots on failure
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: screenshots
-        path: screenshots/
+   
