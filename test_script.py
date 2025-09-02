@@ -148,21 +148,43 @@ def test_input_summ_negative(browser  , type_ , num , reserved , ollsumm):
 @pytest.mark.xfail(reason="Некорректная комиссия")
 @pytest.mark.parametrize("type_,num,expected_comission", [
     ("rub-sum" ,"9099", 909),
-    ("rub-sum" ,"10000", 1000),
+
     ("rub-sum" ,"-10", -1),
     ("rub-sum" , "0", 0),
 
     ("usd-sum" ,"9099", 909),
-    ("usd-sum" ,"10000", 1000),
+
     ("usd-sum" ,"-10", -1),
     ("usd-sum" , "0", 0),
 
     ("euro-sum" ,"9099", 909),
-    ("euro-sum" ,"10000", 1000),
     ("euro-sum" ,"-10", -1),
     ("euro-sum" , "0", 0),
 ])
 def test_comission_rub_negative(browser,type_, num, expected_comission):
+    click_block = browser.find_element(By.ID, type_)
+    click_block.click()
+
+    number_input = browser.find_element(By.CSS_SELECTOR, "[type=text]")
+    number_input.clear()
+    number_input.send_keys("2222222222222222")
+
+    summ_input = browser.find_element(By.CSS_SELECTOR, "input[placeholder='1000']")
+    summ_input.clear()
+    summ_input.send_keys(num)
+
+    comission = browser.find_element(By.ID, "comission")
+    # сравниваем с ожидаемой комиссией
+    assert math.floor(float(comission.text)) == expected_comission and math.floor(float(comission.text)) > 0
+
+@pytest.mark.parametrize("type_,num,expected_comission", [
+    ("rub-sum" ,"10000", 1000),
+
+    ("usd-sum" ,"10000", 1000),
+
+    ("euro-sum" ,"10000", 1000),
+])
+def test_comission_rub_positive(browser,type_, num, expected_comission):
     click_block = browser.find_element(By.ID, type_)
     click_block.click()
 
