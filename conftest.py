@@ -12,9 +12,9 @@ import threading
 # -------------------
 @pytest.fixture(scope="session", autouse=True)
 def serve_site():
-    """Запускает HTTP сервер для папки dist/ на localhost:8000"""
-    dist_path = os.path.join(os.getcwd(), "dist")
-    os.chdir(dist_path)
+    """Запускает HTTP сервер для папки проекта на localhost:8000"""
+    project_path = os.getcwd()  # теперь корень, а не dist
+    os.chdir(project_path)
     server = HTTPServer(("localhost", 8000), SimpleHTTPRequestHandler)
     thread = threading.Thread(target=server.serve_forever)
     thread.start()
