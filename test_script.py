@@ -19,7 +19,7 @@ def browser():
     yield driver
     driver.quit()
 
-'''
+
 # Проверка длины номера
 @pytest.mark.parametrize("type_,number", [
     ("rub-sum", "12345678901234"),       
@@ -64,9 +64,9 @@ def test_summ_input_limit_negative(browser):
     element = browser.find_element(By.CSS_SELECTOR, "input[placeholder='1000']")
     assert len("12345678901234567") == 16
 
-'''
 
-'''
+
+
 # Проверка суммы и резерва
 @pytest.mark.parametrize("type_,num,reserved,ollsumm", [
     ("rub-sum", "10", 20001, 30000),
@@ -103,9 +103,9 @@ def test_input_summ_positive(browser, type_, num, reserved, ollsumm):
     assert total <= int(ollsumm) - reserved, "Сумма с комиссией превышает резерв"
 
     summ_input.clear()
-'''
 
-'''
+
+
 @pytest.mark.parametrize("type_,num,reserved,ollsumm", [
     ("rub-sum", "10000", 20001, 30000),
     ("rub-sum", "9099", 20001, 30000),
@@ -142,7 +142,7 @@ def test_input_summ_negative(browser  , type_ , num , reserved , ollsumm):
     buttons = browser.find_elements(By.ID, "submit-button")
     assert total <= ollsumm - reserved and total > 0  and len(buttons) == 0
     
-'''
+
 
 
 @pytest.mark.xfail(reason="Некорректная комиссия")
